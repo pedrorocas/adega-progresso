@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="min-h-[72vh] grid place-items-center px-4">
+  <div class="w-full max-w-md">
+    <div class="rounded-2xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-7">
+      <div class="text-center mb-6">
+        <div class="mx-auto h-12 w-12 rounded-xl bg-wine-900/60 grid place-items-center text-gold-400">🍷</div>
+        <h1 class="mt-3 text-2xl font-semibold text-gold-400">Entrar na Adega Progresso</h1>
+        <p class="text-sm text-champ-50/85">Use seu e-mail e senha.</p>
+      </div>
+
+      <form method="post" class="space-y-4">
+        <div>
+          <label class="text-sm text-champ-50/90">E-mail</label>
+          <input name="email" type="email" required
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Senha</label>
+          <input name="senha" type="password" required
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+
+        <button type="submit"
+                class="w-full rounded-xl bg-gold-400 hover:bg-gold-300 text-black font-medium py-2 transition">
+          Entrar
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-champ-50/85">
+        Ainda não tem conta?
+        <a class="text-gold-400 hover:text-gold-300" href="{{ url_for('registrar') }}">Faça seu cadastro</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

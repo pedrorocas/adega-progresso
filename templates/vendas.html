@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-gold-400">Vendas</h1>
+    <a href="{{ url_for('vendas_nova') }}"
+       class="px-4 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black text-sm font-medium transition">
+      + Nova venda
+    </a>
+  </div>
+
+  <!-- Filtro de datas -->
+  <form method="get" class="mt-6 grid sm:grid-cols-12 gap-3">
+    <div class="sm:col-span-5 grid grid-cols-2 gap-3">
+      <div>
+        <label class="text-xs text-champ-50/90">De</label>
+        <input type="date" name="d1" value="{{ d1 or '' }}"
+               class="w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 px-3 py-2 text-sm focus:border-gold-400">
+      </div>
+      <div>
+        <label class="text-xs text-champ-50/90">Até</label>
+        <input type="date" name="d2" value="{{ d2 or '' }}"
+               class="w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 px-3 py-2 text-sm focus:border-gold-400">
+      </div>
+    </div>
+    <div class="sm:col-span-3 flex gap-2">
+      <button class="px-4 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black text-sm font-medium transition">Filtrar</button>
+      {% if d1 or d2 %}
+      <a href="{{ url_for('vendas_list') }}"
+         class="px-4 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-sm text-champ-50 grid place-items-center">Limpar</a>
+      {% endif %}
+    </div>
+
+    <!-- Totais -->
+    <div class="sm:col-span-4 grid grid-cols-2 gap-3">
+      <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 p-3 text-center">
+        <div class="text-xs text-gold-300/95">Itens vendidos</div>
+        <div class="text-xl font-semibold text-champ-50">{{ totais['itens'] or 0 }}</div>
+      </div>
+      <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 p-3 text-center">
+        <div class="text-xs text-gold-300/95">Valor total</div>
+        <div class="text-xl font-semibold text-champ-50">
+          {% set v = ("%0.2f"|format(totais['valor'] or 0)).replace('.', ',') %}
+          R$ {{ v }}
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% if vendas %}
+  <div class="mt-6 overflow-x-auto rounded-xl border border-wine-800">
+    <table class="min-w-full text-sm bg-wine-800 text-champ-50">
+      <thead class="bg-wine-900 text-gold-300/95">
+        <tr>
+          <th class="text-left p-3">#</th>
+          <th class="text-left p-3">Data</th>
+          <th class="text-left p-3">Produto</th>
+          <th class="text-right p-3">Qtd</th>
+          <th class="text-right p-3">Preço unit.</th>
+          <th class="text-right p-3">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in vendas %}
+        <tr class="border-t border-wine-900/60">
+          <td class="p-3">{{ v['id'] }}</td>
+          <td class="p-3">{{ v['criado_em'] }}</td>
+          <td class="p-3">{{ v['produto_nome'] }}</td>
+          <td class="p-3 text-right">{{ v['quantidade'] }}</td>
+          <td class="p-3 text-right">
+            {% set pu = ("%0.2f"|format(v['preco_unit'] or 0)).replace('.', ',') %} R$ {{ pu }}
+          </td>
+          <td class="p-3 text-right">
+            {% set tt = ("%0.2f"|format(v['total'] or 0)).replace('.', ',') %} R$ {{ tt }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="bg-wine-900/60">
+        <tr>
+          <td class="p-3" colspan="3"><strong class="text-champ-50">Totais</strong></td>
+          <td class="p-3 text-right"><strong class="text-champ-50">{{ totais['itens'] or 0 }}</strong></td>
+          <td class="p-3 text-right">—</td>
+          <td class="p-3 text-right">
+            <strong class="text-champ-50">
+              {% set v = ("%0.2f"|format(totais['valor'] or 0)).replace('.', ',') %} R$ {{ v }}
+            </strong>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+    <p class="mt-6 text-champ-50/80">Nenhuma venda no período selecionado.</p>
+  {% endif %}
+</section>
+{% endblock %}

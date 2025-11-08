@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-8">
+  <div class="mb-2">
+    <h1 class="text-3xl font-semibold text-gold-400">Dashboard</h1>
+    <p class="text-champ-50/90">Olá, {{ nome }} — visão geral da Adega Progresso.</p>
+  </div>
+
+  <!-- KPIs estoque (cards vinho) -->
+  <div class="mt-6 grid sm:grid-cols-3 gap-6">
+    <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5">
+      <div class="text-sm text-gold-300/95">Rótulos cadastrados</div>
+      <div class="mt-2 text-3xl font-semibold text-champ-50">{{ kpis['qtd_vinhos'] or 0 }}</div>
+    </div>
+    <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5">
+      <div class="text-sm text-gold-300/95">Itens em estoque</div>
+      <div class="mt-2 text-3xl font-semibold text-champ-50">{{ kpis['itens_estoque'] or 0 }}</div>
+    </div>
+    <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5 relative overflow-hidden">
+      <div class="absolute -right-3 -top-3 h-16 w-16 rounded-full bg-gold-400/20"></div>
+      <div class="text-sm text-gold-300/95">Valor estimado do estoque</div>
+      <div class="mt-2 text-3xl font-semibold text-champ-50">
+        {% set v = (kpis['valor_estoque'] or 0.0) %}
+        {% set txt = ("%0.2f"|format(v)).replace('.', ',') %}
+        R$ {{ txt }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendas no período + Estoque baixo -->
+  <div class="mt-8 grid lg:grid-cols-2 gap-6">
+    <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5">
+      <h2 class="text-xl font-semibold flex items-center gap-2 text-gold-400">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-gold-400"></span> Vendas no período
+      </h2>
+      <div class="mt-4 grid grid-cols-2 gap-4">
+        <div class="rounded-lg border border-wine-800 bg-wine-900/50 p-4">
+          <div class="text-sm text-gold-300/95">Itens vendidos</div>
+          <div class="mt-2 text-2xl font-semibold text-champ-50">{{ vendas_hoje['itens_vendidos'] or 0 }}</div>
+        </div>
+        <div class="rounded-lg border border-wine-800 bg-wine-900/50 p-4">
+          <div class="text-sm text-gold-300/95">Valor vendido</div>
+          <div class="mt-2 text-2xl font-semibold text-champ-50">
+            {% set vs = (vendas_hoje['valor_vendido'] or 0.0) %}
+            {% set vtxt = ("%0.2f"|format(vs)).replace('.', ',') %}
+            R$ {{ vtxt }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5">
+      <h2 class="text-xl font-semibold text-gold-400">Estoque baixo (≤ 5)</h2>
+      {% if baixo %}
+      <ul class="mt-4 divide-y divide-wine-900/60">
+        {% for b in baixo %}
+          <li class="py-2 flex items-center justify-between">
+            <span class="text-champ-50">{{ b['nome'] }}</span>
+            <span class="text-sm text-gold-300/95">Estoque: {{ b['estoque'] }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <p class="mt-4 text-champ-50/80">Nenhum item com estoque crítico.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

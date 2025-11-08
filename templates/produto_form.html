@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-3xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-semibold text-gold-400">
+    {{ 'Editar vinho' if produto else 'Novo vinho' }}
+  </h1>
+
+  <div class="mt-6 rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-6">
+    <form method="post" class="grid gap-5">
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="text-sm text-champ-50/90">Nome *</label>
+          <input name="nome" required value="{{ produto['nome'] if produto else '' }}"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Uva</label>
+          <input name="uva" value="{{ produto['uva'] if produto else '' }}"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-5">
+        <div>
+          <label class="text-sm text-champ-50/90">Safra</label>
+          <input name="safra" value="{{ produto['safra'] if produto else '' }}"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Região</label>
+          <input name="regiao" value="{{ produto['regiao'] if produto else '' }}"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Preço *</label>
+          <input name="preco" required
+                 value="{% if produto %}{{ ('{:,.2f}'.format(produto['preco'])).replace('.', ',') }}{% endif %}"
+                 placeholder="ex.: 79,90"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="text-sm text-champ-50/90">Estoque *</label>
+          <input name="estoque" type="number" min="0" required value="{{ produto['estoque'] if produto else 0 }}"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Imagem (URL)</label>
+          <input name="imagem_url" value="{{ produto['imagem_url'] if produto else '' }}"
+                 placeholder="https://exemplo.com/imagem.jpg"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm text-champ-50/90">Descrição</label>
+        <textarea name="descricao" rows="4"
+                  class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">{{ produto['descricao'] if produto else '' }}</textarea>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button class="px-5 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black font-medium">
+          Salvar
+        </button>
+        <a href="{{ url_for('produtos_list') }}"
+           class="px-5 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-champ-50">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

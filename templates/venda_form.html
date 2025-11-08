@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-2xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-semibold text-gold-400">Registrar nova venda</h1>
+  <p class="text-champ-50/90 mb-6">Selecione o vinho e informe a quantidade vendida.</p>
+
+  <div class="rounded-2xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-6">
+    <form method="post" class="grid gap-5" id="vendaForm">
+      <div>
+        <label class="text-sm text-champ-50/90">Produto</label>
+        <select name="produto_id" id="produtoSel" required
+                class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 placeholder-champ-200 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+          <option value="">Selecione...</option>
+          {% for p in produtos %}
+            <option value="{{ p['id'] }}"
+                    data-estoque="{{ p['estoque'] }}"
+                    data-preco="{{ p['preco'] }}">
+              {{ p['nome'] }} — Estoque: {{ p['estoque'] }} — R$ {{ ("%0.2f"|format(p['preco'] or 0)).replace('.', ',') }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-5 items-end">
+        <div>
+          <label class="text-sm text-champ-50/90">Quantidade</label>
+          <input type="number" name="quantidade" id="qtd" min="1" required value="1"
+                 class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+          <p class="text-xs mt-1" id="estoqueInfo"></p>
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Preço unitário</label>
+          <div class="mt-1 rounded-xl border border-wine-800 bg-wine-900/60 px-3 py-2 text-sm text-champ-50" id="precoUnitTxt">—</div>
+        </div>
+        <div>
+          <label class="text-sm text-champ-50/90">Total</label>
+          <div class="mt-1 rounded-xl border border-wine-800 bg-wine-900/60 px-3 py-2 text-sm font-semibold text-gold-400" id="totalTxt">—</div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button class="px-5 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black font-medium">
+          Registrar
+        </button>
+        <a href="{{ url_for('vendas_list') }}"
+           class="px-5 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-champ-50">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+(function(){
+  const sel = document.getElementById('produtoSel');
+  const qtd = document.getElementById('qtd');
+  const estoqueInfo = document.getElementById('estoqueInfo');
+  const precoUnitTxt = document.getElementById('precoUnitTxt');
+  const totalTxt = document.getElementById('totalTxt');
+  const form = document.getElementById('vendaForm');
+
+  function fmt(v){ return (v).toFixed(2).replace('.', ','); }
+
+  function update(){
+    const opt = sel.options[sel.selectedIndex];
+    if(!opt || !opt.dataset.estoque){
+      estoqueInfo.textContent = '';
+      precoUnitTxt.textContent = '—';
+      totalTxt.textContent = '—';
+      return;
+    }
+    const estoque = parseInt(opt.dataset.estoque || '0', 10);
+    const preco = parseFloat(opt.dataset.preco || '0');
+    const q = parseInt(qtd.value || '0', 10);
+
+    estoqueInfo.textContent = `Estoque disponível: ${estoque}`;
+    estoqueInfo.style.color = q > estoque ? '#F2C94C' : 'rgba(255,255,255,0.75)';
+
+    precoUnitTxt.textContent = `R$ ${fmt(preco)}`;
+    totalTxt.textContent = q>0 ? `R$ ${fmt(preco*q)}` : '—';
+  }
+
+  sel.addEventListener('change', update);
+  qtd.addEventListener('input', update);
+  update();
+
+  form.addEventListener('submit', e=>{
+    const opt = sel.options[sel.selectedIndex];
+    if(!opt || !opt.dataset.estoque) return;
+    const estoque = parseInt(opt.dataset.estoque||'0',10);
+    const q = parseInt(qtd.value||'0',10);
+    if(q>estoque){
+      e.preventDefault();
+      alert('Quantidade maior que o estoque disponível.');
+    }
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-5xl mx-auto px-4 py-10">
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="rounded-xl border border-wine-800 bg-wine-700 text-champ-50 p-5">
+      <div class="rounded-lg overflow-hidden border border-wine-800">
+        <img src="{{ p['imagem_url'] or 'https://placehold.co/900x600?text=Vinho' }}" alt="{{ p['nome'] }}">
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-wine-800 bg-wine-700 text-champ-50 p-5">
+      <h1 class="text-2xl font-semibold">{{ p['nome'] }}</h1>
+      <p class="mt-1 text-gold-300/90">{{ p['uva'] or 'Uva n/d' }} • {{ p['regiao'] or 'Região n/d' }} • {{ p['safra'] or 'Safra n/d' }}</p>
+
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <div class="rounded-lg border border-wine-800 bg-wine-800/60 p-4">
+          <div class="text-xs text-gold-300/90">Preço</div>
+          <div class="text-xl font-semibold">{{ p['preco']|brl }}</div>
+        </div>
+        <div class="rounded-lg border border-wine-800 bg-wine-800/60 p-4">
+          <div class="text-xs text-gold-300/90">Estoque</div>
+          <div class="text-xl font-semibold">{{ p['estoque'] }}</div>
+        </div>
+        <div class="rounded-lg border border-wine-800 bg-wine-800/60 p-4">
+          <div class="text-xs text-gold-300/90">Vendidos (qtd)</div>
+          <div class="text-xl font-semibold">{{ vendas_info['qtd_vendida'] or 0 }}</div>
+        </div>
+        <div class="rounded-lg border border-wine-800 bg-wine-800/60 p-4">
+          <div class="text-xs text-gold-300/90">Vendido (R$)</div>
+          <div class="text-xl font-semibold">
+            {% set v = ("%0.2f"|format(vendas_info['valor_vendido'] or 0)).replace('.', ',') %}
+            R$ {{ v }}
+          </div>
+        </div>
+      </div>
+
+      {% if p['descricao'] %}
+        <div class="mt-4 rounded-lg border border-wine-800 bg-wine-800/60 p-4">
+          <div class="text-xs text-gold-300/90 mb-1">Descrição</div>
+          <p>{{ p['descricao'] }}</p>
+        </div>
+      {% endif %}
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        <a href="{{ url_for('vendas_nova') }}" class="px-4 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black text-sm font-medium">Vender</a>
+        <a href="{{ url_for('estoque_entrada') }}" class="px-4 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-sm">Entrada</a>
+        <a href="{{ url_for('produtos_editar', pid=p['id']) }}" class="px-4 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-sm">Editar</a>
+        <a href="{{ url_for('produtos_list') }}" class="px-4 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-sm">Voltar</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

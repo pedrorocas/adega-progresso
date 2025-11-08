@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Adega Progresso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Paleta
+            wine: {
+              300: '#A13A43',
+              400: '#7A1A22',
+              500: '#590E15',   /* vinho principal */
+              600: '#4F0D13',
+              700: '#450B11',
+              800: '#3B0A0F',
+              900: '#2E070B',
+              950:'#130306'     /* fundo quase preto com viés vinho */
+            },
+            gold: {
+              300: '#FFE082',   /* amarelo suave */
+              400: '#F2C94C',   /* dourado/acento */
+              500: '#E0B53A'
+            },
+            champ: {
+              100: '#FFF3E0',   /* champanhe claro para textos/traços */
+              200: '#F7E7CE'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 40px rgba(0,0,0,.35)'
+          },
+          borderRadius: {
+            xl2: '1.1rem'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<!-- Fundo escuro + texto claro -->
+<body class="bg-wine-950 text-champ-100 min-h-screen flex flex-col">
+  <!-- ======= NAVBAR (escura com detalhes dourados) ======= -->
+  <header class="border-b border-wine-900 bg-wine-900/70 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+         class="text-lg md:text-xl font-semibold tracking-wide flex items-center gap-2">
+        <span class="inline-block h-2 w-2 rounded-full bg-gold-400 shadow"></span>
+        <span class="text-gold-400">Adega</span> Progresso
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('dashboard') }}" class="hover:text-gold-400 transition">Dashboard</a>
+          <a href="{{ url_for('produtos_list') }}" class="hover:text-gold-400 transition">Vinhos</a>
+          <a href="{{ url_for('vendas_list') }}" class="hover:text-gold-400 transition">Vendas</a>
+          <a href="{{ url_for('perfil') }}" class="hover:text-gold-400 transition">Perfil</a>
+          <a href="{{ url_for('logout') }}" class="hover:text-gold-400 transition">Sair</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-gold-400 transition">Login</a>
+          <a href="{{ url_for('registrar') }}" class="hover:text-gold-400 transition">Cadastro</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======= FLASH MESSAGES (contraste no dark) ======= -->
+  <div class="max-w-md w-full mx-auto px-4 mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-2">
+          {% for category, message in messages %}
+          <div class="rounded-xl px-4 py-3 text-sm shadow-soft
+            {% if category=='success' %} bg-emerald-800/25 border border-emerald-500/40 text-emerald-200
+            {% elif category=='danger' %}  bg-red-800/25     border border-red-500/40     text-red-200
+            {% else %}                     bg-wine-800/35    border border-wine-700       text-champ-100 {% endif %}">
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- ======= CONTEÚDO ======= -->
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ======= RODAPÉ ======= -->
+  <footer class="border-t border-wine-900 mt-10">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-champ-100/70">
+      © 2025 Adega Progresso.
+    </div>
+  </footer>
+
+  <!-- ======= ESTILOS DE COMPONENTES (botões/inputs) ======= -->
+  <script>
+    // Nenhum JS adicional necessário — os templates já usam as classes abaixo:
+    // Use:
+    //  - Botão primário:  class="px-5 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black font-medium"
+    //  - Botão secundário: class="px-5 py-2 rounded-xl border border-wine-700 hover:border-gold-400 text-champ-100"
+    //  - Card vinho: class="rounded-xl border border-wine-800 bg-wine-700 text-champ-100 shadow-soft p-5"
+    //  - Campo input escuro: class="rounded-xl border border-wine-800 bg-wine-900/50 px-3 py-2 text-sm focus:outline-none focus:border-gold-400"
+  </script>
+</body>
+</html>
