@@ -3,11 +3,14 @@ from flask_bcrypt import Bcrypt
 from functools import wraps
 import sqlite3, os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "loja.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.getenv("DB_PATH", os.path.join(BASE_DIR, "loja.db"))
+
+import os
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "troque-esta-chave-por-uma-bem-grande-e-aleatoria"
+
+app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET", "dev-secret")
 bcrypt = Bcrypt(app)
 
 # ----------------- DB -----------------
