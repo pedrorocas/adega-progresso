@@ -6,6 +6,44 @@
     <p class="text-champ-50/90">Olá, {{ nome }} — visão geral da Adega Progresso.</p>
   </div>
 
+  <!-- FILTROS (período) -->
+  <form method="get"
+        class="mt-4 rounded-2xl border border-wine-800 bg-wine-900/50 p-4 grid sm:grid-cols-12 gap-3">
+    <div class="sm:col-span-3">
+      <label class="text-xs text-champ-50/90">De</label>
+      <input type="date" name="d1" value="{{ d1 or '' }}"
+             class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+    </div>
+
+    <div class="sm:col-span-3">
+      <label class="text-xs text-champ-50/90">Até</label>
+      <input type="date" name="d2" value="{{ d2 or '' }}"
+             class="mt-1 w-full rounded-xl border border-wine-800 bg-wine-900/60 text-champ-50 px-3 py-2 text-sm focus:outline-none focus:border-gold-400">
+    </div>
+
+    <div class="sm:col-span-3 flex items-end gap-2">
+      <button class="w-full px-4 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black text-sm font-medium">
+        Aplicar
+      </button>
+      {% if d1 or d2 %}
+      <a href="{{ url_for('dashboard') }}"
+         class="px-4 py-2 rounded-xl border border-wine-800 hover:border-gold-400 text-champ-50 text-sm">
+        Limpar
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="sm:col-span-3 flex items-end justify-end">
+      <div class="w-full text-right text-xs text-champ-50/70">
+        {% if d1 or d2 %}
+          Período: <span class="text-champ-50">{{ d1 or 'início' }}</span> — <span class="text-champ-50">{{ d2 or 'hoje' }}</span>
+        {% else %}
+          Exibindo últimos 30 dias
+        {% endif %}
+      </div>
+    </div>
+  </form>
+
   <!-- KPIs estoque (cards vinho) -->
   <div class="mt-6 grid sm:grid-cols-3 gap-6">
     <div class="rounded-xl border border-wine-800 bg-wine-800 text-champ-50 shadow-soft p-5">
