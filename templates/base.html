@@ -4,48 +4,71 @@
   <meta charset="utf-8">
   <title>Adega Progresso</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            // Paleta
             wine: {
               300: '#A13A43',
               400: '#7A1A22',
-              500: '#590E15',   /* vinho principal */
+              500: '#590E15',
               600: '#4F0D13',
               700: '#450B11',
               800: '#3B0A0F',
               900: '#2E070B',
-              950:'#130306'     /* fundo quase preto com viés vinho */
+              950: '#130306'
             },
             gold: {
-              300: '#FFE082',   /* amarelo suave */
-              400: '#F2C94C',   /* dourado/acento */
+              300: '#FFE082',
+              400: '#F2C94C',
               500: '#E0B53A'
             },
             champ: {
-              100: '#FFF3E0',   /* champanhe claro para textos/traços */
+              100: '#FFF3E0',
               200: '#F7E7CE'
             }
           },
           boxShadow: {
             soft: '0 10px 40px rgba(0,0,0,.35)'
-          },
-          borderRadius: {
-            xl2: '1.1rem'
           }
         }
       }
     }
   </script>
+
+  <!-- ======================
+       ÍCONE DE CALENDÁRIO CLARO
+       ====================== -->
+  <style>
+    /* Texto claro no input date */
+    input[type="date"] {
+      color: #FFF3E0 !important;
+    }
+
+    /* Clarear o ícone do calendário no Chrome/Edge */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 1 !important;
+      filter: invert(1) brightness(2.3) saturate(2) contrast(1.4) !important;
+      cursor: pointer;
+    }
+
+    /* Ajuste especial somente para Chrome/Edge (iOS ignora) */
+    @supports (-webkit-touch-callout: none) {
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1) brightness(3) contrast(2) !important;
+      }
+    }
+  </style>
+
 </head>
 
-<!-- Fundo escuro + texto claro -->
 <body class="bg-wine-950 text-champ-100 min-h-screen flex flex-col">
-  <!-- ======= NAVBAR (escura com detalhes dourados) ======= -->
+
+  <!-- NAVBAR -->
   <header class="border-b border-wine-900 bg-wine-900/70 backdrop-blur">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
@@ -69,7 +92,7 @@
     </div>
   </header>
 
-  <!-- ======= FLASH MESSAGES (contraste no dark) ======= -->
+  <!-- FLASH MESSAGES -->
   <div class="max-w-md w-full mx-auto px-4 mt-4">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -87,26 +110,21 @@
     {% endwith %}
   </div>
 
-  <!-- ======= CONTEÚDO ======= -->
+  <!-- CONTEÚDO -->
   <main class="flex-1">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- ======= RODAPÉ ======= -->
+  <!-- RODAPÉ -->
   <footer class="border-t border-wine-900 mt-10">
     <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-champ-100/70">
       © 2025 Adega Progresso.
     </div>
   </footer>
 
-  <!-- ======= ESTILOS DE COMPONENTES (botões/inputs) ======= -->
   <script>
-    // Nenhum JS adicional necessário — os templates já usam as classes abaixo:
-    // Use:
-    //  - Botão primário:  class="px-5 py-2 rounded-xl bg-gold-400 hover:bg-gold-300 text-black font-medium"
-    //  - Botão secundário: class="px-5 py-2 rounded-xl border border-wine-700 hover:border-gold-400 text-champ-100"
-    //  - Card vinho: class="rounded-xl border border-wine-800 bg-wine-700 text-champ-100 shadow-soft p-5"
-    //  - Campo input escuro: class="rounded-xl border border-wine-800 bg-wine-900/50 px-3 py-2 text-sm focus:outline-none focus:border-gold-400"
+    // Nada adicional aqui — você já usa Tailwind em tudo.
   </script>
+
 </body>
 </html>
